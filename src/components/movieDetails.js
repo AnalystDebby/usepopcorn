@@ -59,7 +59,6 @@ export const MovieDetails = ({
           const data = await res.json();
           setMovie(data);
         } catch (error) {
-          console.error(error.message);
           setError(error.message);
         } finally {
           setIsLoading(false);
@@ -68,6 +67,34 @@ export const MovieDetails = ({
       getMovieDetails();
     },
     [selectedId, error]
+  );
+
+  useEffect(
+    function () {
+      if (!title) return;
+      document.title = `Movie | ${title}`;
+
+      return function () {
+        document.title = "usePopcorn";
+      };
+    },
+    [title]
+  );
+
+  useEffect(
+    function () {
+      function callback(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+        }
+      }
+      document.addEventListener("keydown", callback);
+
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [onCloseMovie]
   );
 
   return (
